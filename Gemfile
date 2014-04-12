@@ -11,6 +11,7 @@ gem "json"
 group :test, :development do
   gem "rake"
   gem "rspec"
+  gem "database_cleaner"
   gem "awesome_print"
 end
 

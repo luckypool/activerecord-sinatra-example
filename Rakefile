@@ -5,9 +5,10 @@ require_relative "app"
 
 ENV["RACK_ENV"] ||= "development"
 
+ActiveRecord::Tasks::DatabaseTasks.db_dir = 'db'
+ActiveRecord::Tasks::DatabaseTasks.root   = '.'
+
 task :default => [:spec]
 task :spec do
-  ENV["RACK_ENV"] = "test"
-  sh "rake db:schema:load"
   sh "rspec"
 end
