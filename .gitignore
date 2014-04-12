@@ -12,3 +12,4 @@ vendor/gems/*
 /.bundle/
 /db/*.db
 
+/Gemfile.lock
