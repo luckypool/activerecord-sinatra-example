@@ -1,9 +1,9 @@
 require 'rspec'
 require "database_cleaner"
 
-ENV["RACK_ENV"] = "test"
+require_relative "../app"
 
-require File.join(File.dirname(__FILE__), '..', 'app')
+ENV["RACK_ENV"] = "test"
 
 RSpec.configure do |config|
   config.order = 'random'

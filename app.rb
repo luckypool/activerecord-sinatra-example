@@ -1,12 +1,14 @@
-require "sinatra"
+require "sinatra/base"
 require "sinatra/json"
 require "sinatra/activerecord"
 require "oj"
+
 require_relative "models/user"
 
-set :database_file, "config/database.yml"
-
 class TutorialApp < Sinatra::Base
+  register Sinatra::ActiveRecordExtension
+  set :database_file, "config/database.yml"
+
   use ActiveRecord::ConnectionAdapters::ConnectionManagement
 
   post "/users" do
