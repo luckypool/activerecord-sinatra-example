@@ -4,12 +4,10 @@ require "sinatra/activerecord"
 require "oj"
 require_relative "models/user"
 
-class TutorialApp < Sinatra::Base
-  set :database_file, "config/database.yml"
+set :database_file, "config/database.yml"
 
-  before do
-    ActiveRecord::Base.establish_connection(ENV["RACK_ENV"].to_sym)
-  end
+class TutorialApp < Sinatra::Base
+  use ActiveRecord::ConnectionAdapters::ConnectionManagement
 
   post "/users" do
     data = Oj.load(request.body.read)
@@ -42,10 +40,6 @@ class TutorialApp < Sinatra::Base
     user.destroy
     response.status = 204
     nil
-  end
-
-  after do
-    ActiveRecord::Base.connection.close
   end
 end
 
