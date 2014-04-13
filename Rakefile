@@ -5,8 +5,8 @@ require_relative "app"
 
 ENV["RACK_ENV"] ||= "development"
 
-ActiveRecord::Tasks::DatabaseTasks.db_dir = 'db'
-ActiveRecord::Tasks::DatabaseTasks.root   = '.'
+ActiveRecord::Tasks::DatabaseTasks.db_dir = './db'
+ActiveRecord::Tasks::DatabaseTasks.root   = './'
 
 task :default => [:spec]
 task :spec do
