@@ -1,6 +1,6 @@
 require "spec_helper"
 require "rack/test"
-require "json"
+require "oj"
 
 shared_examples_for "user object(s)" do 
   describe "Header" do
@@ -8,7 +8,7 @@ shared_examples_for "user object(s)" do
   end
 
   describe "Body" do
-    it { expect(JSON.parse(response.body)).to include(expected_body) }
+    it { expect(Oj.load(response.body)).to include(expected_body) }
   end
 end
 
@@ -44,7 +44,7 @@ describe "app.rb" do
   context "when GET" do
     let!(:expected_body) {
         post "/users", expected.to_json, "CONTENT_TYPE" => "application/json"
-        JSON.parse(last_response.body)
+        Oj.load(last_response.body)
     }
     after :all do
       delete "/users/#{expected_body['id']}"
@@ -65,10 +65,10 @@ describe "app.rb" do
     let!(:response) {
       post "/users", expected.to_json, "CONTENT_TYPE" => "application/json" 
     }
-    let(:id) { JSON.parse(response.body)['id'] }
+    let(:id) { Oj.load(response.body)['id'] }
     let!(:expected_body) {
       get "/users/#{id}"
-      JSON.parse(last_response.body)
+      Oj.load(last_response.body)
     }
     after :all do
       delete "/users#{id}"
@@ -80,14 +80,14 @@ describe "app.rb" do
   context "when PUT /users/:id" do
     let!(:response) {
       post "/users", expected.to_json, "CONTENT_TYPE" => "application/json"
-      initial_data = JSON.parse(last_response.body)
+      initial_data = Oj.load(last_response.body)
       initial_data['name'] = "King?"
       put "/users/#{initial_data['id']}", initial_data.to_json, "CONTENT_TYPE" => "application/json"
     }
-    let(:id) { JSON.parse(response.body)['id'] }
+    let(:id) { Oj.load(response.body)['id'] }
     let!(:expected_body) {
       get "/users/#{id}"
-      JSON.parse(last_response.body)
+      Oj.load(last_response.body)
     }
     after :all do
       delete "/users#{id}"
@@ -99,12 +99,12 @@ describe "app.rb" do
   context "when DELETE /users/:id" do
     let!(:posted) {
       post "/users", expected.to_json, "CONTENT_TYPE" => "application/json"
-      JSON.parse(last_response.body)
+      Oj.load(last_response.body)
     }
     let!(:response) {
       delete "/users/#{posted['id']}"
     }
-    let(:id) { JSON.parse(response.body)['id'] }
+    let(:id) { Oj.load(response.body)['id'] }
     it_behaves_like "204 no content"
   end
 end

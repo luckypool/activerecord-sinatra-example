@@ -1,7 +1,7 @@
 require "sinatra"
 require "sinatra/json"
 require "sinatra/activerecord"
-require "json"
+require "oj"
 require_relative "models/user"
 
 class TutorialApp < Sinatra::Base
@@ -12,7 +12,7 @@ class TutorialApp < Sinatra::Base
   end
 
   post "/users" do
-    data = JSON.parse(request.body.read)
+    data = Oj.load(request.body.read)
     user = User.create!(data)
     response.status = 201
     json user
@@ -30,7 +30,7 @@ class TutorialApp < Sinatra::Base
 
   put "/users/:id" do
     user = User.where("id" => params[:id]).first
-    data = JSON.parse(request.body.read)
+    data = Oj.load(request.body.read)
     user.name = data["name"]
     user.birthday = data["birthday"]
     user.save!
