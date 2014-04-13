@@ -11,9 +11,14 @@ class TutorialApp < Sinatra::Base
 
   post "/users" do
     data = Oj.load(request.body.read)
-    user = User.create!(data)
-    response.status = 201
-    json user
+    begin
+      user = User.create!(data)
+      response.status = 201
+      json user
+    rescue ActiveRecord::RecordInvalid
+      response.status = 400
+      json "message"=>"Bad Request"
+    end
   end
 
   get "/users/:id" do
@@ -31,8 +36,13 @@ class TutorialApp < Sinatra::Base
     data = Oj.load(request.body.read)
     user.name = data["name"]
     user.birthday = data["birthday"]
-    user.save!
-    json user
+    begin
+      user.save!
+      json user
+    rescue ActiveRecord::RecordInvalid
+      response.status = 400
+      json "message"=>"Bad Request"
+    end
   end
 
   delete "/users/:id" do
