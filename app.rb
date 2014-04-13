@@ -19,13 +19,18 @@ class TutorialApp < Sinatra::Base
       json user
     rescue ActiveRecord::RecordInvalid
       response.status = 400
-      json "message"=>"Bad Request"
+      nil
     end
   end
 
   get "/users/:id" do
     user = User.where("id" => params[:id]).first
-    json user
+    unless user
+      response.status = 404
+      nil
+    else
+      json user
+    end
   end
 
   get "/users" do
@@ -43,7 +48,7 @@ class TutorialApp < Sinatra::Base
       json user
     rescue ActiveRecord::RecordInvalid
       response.status = 400
-      json "message"=>"Bad Request"
+      nil
     end
   end
 
